@@ -1,0 +1,208 @@
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+<base href="https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/">
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+    <title>Subway Surfers</title>  
+    <link rel="icon" href="img/FirstAvatar.png">
+    
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000000;
+        }
+
+        /* Black Screen Overlay */
+        #custom-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000000;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding-top: 40px;
+            z-index: 99999;
+            transition: opacity 0.6s ease-out;
+            box-sizing: border-box;
+        }
+
+        /* Top-Centered Logo */
+        .loader-logo {
+            max-width: 40%;
+            max-height: 35vh;
+            object-fit: contain;
+        }
+    </style>
+
+    <script type="text/javascript" src="4399.z.js"></script>
+    <script>
+        window.config = {
+            loader: "unity",
+            debug: false,
+            maxRatio: 16 / 9,
+            minRatio: 9 / 16,
+            title: "Subway Surfers: San Francisco",
+            unityVersion: "2019.4.18f1",
+            unityWebglBuildUrl: "SanFrancisco.json",
+            fileSize: 35,
+            cachedDecompressedFileSizes: {
+                "SanFrancisco.asm.code.unityweb": 9077143,
+                "SanFrancisco.asm.framework.unityweb": 86369,
+                "SanFrancisco.asm.memory.unityweb": 951447,
+                "SanFrancisco.data.unityweb": 18323917,
+                "SanFrancisco.wasm.code.unityweb": 7279617,
+                "SanFrancisco.wasm.framework.unityweb": 90693,
+            },
+        }; 
+        window.mergedBlobUrls = {};
+        window.assetsReady = false;
+
+        function deleteLoadingScreen() {
+            const loader = document.getElementById('custom-loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    if (loader.parentNode) {
+                        loader.parentNode.removeChild(loader);
+                    }
+                }, 600);
+            }
+        }
+
+        function hideLoadingScreen() {
+            setTimeout(() => {
+                deleteLoadingScreen();
+            }, 3000);
+        }
+
+        async function fetchPart(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) return null;
+                const buffer = await response.arrayBuffer();
+                return buffer;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        async function mergeSplitFile(fileUrlBase, numParts = 2) {
+            const partUrls = Array.from({ length: numParts }, (_, i) => 
+                `${fileUrlBase}.part${i + 1}`
+            );
+
+            try {
+                const parts = [];
+                for (let i = 0; i < partUrls.length; i++) {
+                    const buffer = await fetchPart(partUrls[i]);
+                    if (!buffer) return null;
+                    parts.push(buffer);
+                }
+
+                const combinedBlob = new Blob(parts, {
+                    type: 'application/octet-stream'
+                });
+
+                return URL.createObjectURL(combinedBlob);
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function setupXHRInterceptor() {
+            if (window.xhrInterceptorInstalled) {
+                return;
+            }
+            
+            const originalOpen = XMLHttpRequest.prototype.open;
+            const originalSend = XMLHttpRequest.prototype.send;
+
+            XMLHttpRequest.prototype.open = function(method, url, ...args) {
+                this._url = url;
+                this._method = method;
+                this._args = args;
+                
+                let finalUrl = url;
+                for (const [filename, blobUrl] of Object.entries(window.mergedBlobUrls)) {
+                    if (url.includes(filename)) {
+                        finalUrl = blobUrl;
+                        break;
+                    }
+                }
+                
+                return originalOpen.call(this, method, finalUrl, ...args);
+            };
+
+            XMLHttpRequest.prototype.send = function(...args) {
+                const xhr = this;
+                
+                if (!window.assetsReady) {
+                    const checkReady = setInterval(() => { 
+                        if (window.assetsReady) {
+                            clearInterval(checkReady);
+                            originalSend.apply(xhr, args);
+                        }
+                    }, 50);
+                    return;
+                }
+                
+                return originalSend.apply(this, args);
+            };
+            
+            window.xhrInterceptorInstalled = true;
+        }
+
+        async function prepareGameAssets() {
+            try {
+                window.assetsReady = false;
+                delete window.xhrInterceptorInstalled;
+                window.mergedBlobUrls = {};
+                
+                setupXHRInterceptor();
+                
+                const filesToMerge = [
+                    'SanFrancisco.data.unityweb',
+                    'SanFrancisco.wasm.code.unityweb'
+                ];
+                 
+                for (const filename of filesToMerge) {
+                    const blobUrl = await mergeSplitFile(filename, 2);
+                    if (blobUrl) {
+                        window.mergedBlobUrls[filename] = blobUrl;
+                    } 
+                }
+
+                window.assetsPrepared = true;
+                window.assetsReady = true;
+                
+                hideLoadingScreen();
+                
+            } catch (error) {
+                window.assetsPrepared = false;
+                window.assetsReady = true;
+                hideLoadingScreen();
+            }
+        }
+
+        prepareGameAssets();
+    </script>
+</head>
+<body>
+    <div id="custom-loader">
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/a3/Subway_Surfers_logo.svg/1280px-Subway_Surfers_logo.svg.png" alt="Subway Surfers Logo" class="loader-logo">
+    </div>
+
+    <script src="master-loader.js"></script>
+</body>
+</html>

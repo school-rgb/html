@@ -1,15 +1,18 @@
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-L7856P3VNT"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-L7856P3VNT');
-</script><html>
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="Boxing Random" />
+<Content type="html"><![CDATA[
+
+<!DOCTYPE html>
+<html>
 <head>
-	
-    
-    
 <meta charset="UTF-8">
 <title>Boxing Random</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
@@ -19,49 +22,15 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@25f6152ab54ec5409c832c904ed3e5e482600d6a/boxstyle.css" type="text/css">
 
-<style>
-#sidebarad1,
-#sidebarad2 {
-  position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 160px;
-  height: 600px;
-  padding: 0;
-  margin: 0;
-  z-index: 999999;
-}
-#sidebarad1 {
-  left: 0;
-}
-#sidebarad2 {
-  right: 0;
-}
-.sidebar-close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 22px;
-  height: 22px;
-  line-height: 22px;
-  text-align: center;
-  background: rgba(0,0,0,0.7);
-  color: #fff;
-  font-size: 14px;
-  cursor: pointer;
-  user-select: none;
-  z-index: 10;
-}
-.sidebar-frame {
-  width: 160px;
-  height: 600px;
-  border: none;
-  display: block;
-}
-</style>
 </head>
 <body>
 
+<script>
+if (location.protocol.substr(0, 4) ==="file")
+{
+	alert("Web exports won't work until you upload them. (When running on the file: protocol, browsers block many features from working for security reasons.)");
+}
+</script>
 	<script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@25f6152ab54ec5409c832c904ed3e5e482600d6a/boxwasm.js"></script>
 	<noscript>
 		<div id="notSupportedWrap">
@@ -73,9 +42,8 @@
 	<script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@25f6152ab54ec5409c832c904ed3e5e482600d6a/boxclient.js" type="module"></script>
 	<script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@25f6152ab54ec5409c832c904ed3e5e482600d6a/boxmain.js" type="module"></script>
 	<script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@25f6152ab54ec5409c832c904ed3e5e482600d6a/boxsw.js" type="module"></script>
-<div id="sidebarad1">
-  <div class="sidebar-close" onclick="this.parentElement.style.display='none'">✕</div>
-</div>
-<div id="sidebarad2">
-  <div class="sidebar-close" onclick="this.parentElement.style.display='none'">✕</div>
-</div>
+</body>
+</html>
+
+</Content>
+</Module>
